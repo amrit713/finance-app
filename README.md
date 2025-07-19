@@ -19,11 +19,11 @@ A modern personal finance app focused on **expense tracking, budget management, 
 ## 📱 Tech Stack
 
 - **Frontend:** React Native (cross-platform iOS & Android)  
-- **Backend:** Node.js with Express / Hono or Go (API server)  
+- **Backend:** Go fiber.go 
 - **Database:** PostgreSQL (relational data with UUIDs)  
-- **Authentication:** JWT or Firebase Auth  
-- **Push Notifications:** Firebase Cloud Messaging or Expo Push  
-- **ORM:** GORM (Go) or Prisma (Node.js)  
+- **Authentication:** JWT  
+- **Push Notifications:** Expo Push  
+- **ORM:** GORM (Go) 
 
 ---
 
