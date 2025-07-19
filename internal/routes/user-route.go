@@ -1,7 +1,6 @@
 package routes
 
 import (
-	"github.com/amirt713/finance-app/config"
 	"github.com/amirt713/finance-app/internal/controllers"
 	"github.com/amirt713/finance-app/internal/middlewares"
 	"github.com/amirt713/finance-app/internal/repositories"
@@ -9,9 +8,8 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-func userRoute(api fiber.Router) {
+func userRoute(api fiber.Router, userRepo *repositories.UserRepository) {
 
-	userRepo := repositories.NewUserRepository(config.DB)
 	authService := services.NewAuthService(userRepo)
 	authController := controllers.NewAuthController(authService)
 

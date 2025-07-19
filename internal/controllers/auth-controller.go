@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"fmt"
 	"time"
 
 	"github.com/amirt713/finance-app/internal/dto"
@@ -22,21 +21,24 @@ func NewAuthController(service interfaces.IAuthService) *AuthController {
 func (c *AuthController) Register(ctx *fiber.Ctx) error {
 	var input dto.UserRequestType
 	if err := ctx.BodyParser(&input); err != nil {
-		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "invalid input"})
+		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{"success": false, "error": "invalid input"})
 	}
 
-	fmt.Println(input.Password)
 	user, err := c.service.Register(&input)
 
 	if err != nil {
-		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
+		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{"success": false, "error": err.Error()})
 	}
 
 	utils.SetJwtCookie(ctx, user.Token)
 
 	return ctx.Status(fiber.StatusCreated).JSON(fiber.Map{
-		"status": "success",
-		"code":   fiber.StatusOK, "data": dto.AuthResponse{User: user.User, Token: user.Token},
+		"success": true,
+		"message": "User register  successfully",
+
+		"data": fiber.Map{
+			"user": dto.AuthResponse{User: user.User, Token: user.Token},
+		},
 	})
 }
 
@@ -46,7 +48,7 @@ func (c *AuthController) Login(ctx *fiber.Ctx) error {
 	var input dto.LoginInput
 
 	if err := ctx.BodyParser(&input); err != nil {
-		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{"success": false,
 			"error": "Invalid input format",
 		})
 	}
@@ -54,14 +56,19 @@ func (c *AuthController) Login(ctx *fiber.Ctx) error {
 	user, err := c.service.Login(&input)
 
 	if err != nil {
-		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
+		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{"success": false, "error": err.Error()})
 	}
 
 	utils.SetJwtCookie(ctx, user.Token)
 
 	return ctx.Status(fiber.StatusOK).JSON(fiber.Map{
-		"status": "success",
-		"code":   fiber.StatusOK, "data": dto.AuthResponse{User: user.User, Token: user.Token},
+
+		"success": true,
+		"message": "User login  successfully",
+
+		"data": fiber.Map{
+			"user": dto.AuthResponse{User: user.User, Token: user.Token},
+		},
 	})
 }
 
@@ -77,7 +84,10 @@ func (c *AuthController) Logout(ctx *fiber.Ctx) error {
 	})
 
 	return ctx.Status(fiber.StatusOK).JSON(fiber.Map{
-		"message": "Logout sucessfully",
+		"success": true,
+		"message": "User logout successfully",
+
+		"data": nil,
 	})
 }
 

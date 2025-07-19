@@ -20,7 +20,7 @@ type Budget struct {
 	UpdatedAt time.Time `json:"-"`
 }
 
-func (n *Budget) BeforeCreate(tx *gorm.DB) (err error) {
-	n.ID = uuid.New()
+func (b *Budget) BeforeCreate(tx *gorm.DB) (err error) {
+	b.ID = uuid.New()
 	return
 }
