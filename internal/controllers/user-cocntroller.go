@@ -20,15 +20,19 @@ func (c *UserController) GetAllUsers(ctx *fiber.Ctx) error {
 	users, err := c.userService.GetAllUsers()
 
 	if err != nil {
-		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"success": false,
 			"error": "Failed to fetch users",
 		})
 	}
 
 	return ctx.JSON(fiber.Map{
-		"status":     fiber.StatusAccepted,
-		"total_user": len(users),
-		"data":       users,
+		"success":     true,
+		"total_users": len(users),
+		"message":     "User fetched successfully",
+
+		"data": fiber.Map{
+			"users": users,
+		},
 	})
 }
 
@@ -38,19 +42,23 @@ func (c *UserController) EditMe(ctx *fiber.Ctx) error {
 	var input dto.UpdateUserInput
 
 	if err := ctx.BodyParser(&input); err != nil {
-		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{"success": false,
 			"error": "Invalid input",
 		})
 	}
 	err := c.userService.Update(user, &input)
 
 	if err != nil {
-		return ctx.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": err.Error()})
+		return ctx.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"success": false, "error": err.Error()})
 	}
 
 	return ctx.Status(fiber.StatusOK).JSON(fiber.Map{
+		"success": true,
 		"message": "User updated successfully",
-		"user":    user,
+
+		"data": fiber.Map{
+			"user": user,
+		},
 	})
 }
 

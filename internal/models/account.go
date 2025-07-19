@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"gorm.io/gorm"
 )
 
 type AccountType string
@@ -22,10 +23,15 @@ type Account struct {
 	IsDefault bool        `gorm:"default:false;" json:"is_default"`
 
 	UserID uuid.UUID ` gorm:"index" json:"user_id"`
-	User   User      `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
+	User   *User     `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE" json:"user "`
 
 	Transactions []Transaction `json:"transactions"`
 
 	CreatedAt time.Time `json:"-"`
 	UpdatedAt time.Time `json:"-"`
+}
+
+func (a *Account) BeforeCreate(tx *gorm.DB) (err error) {
+	a.ID = uuid.New()
+	return
 }

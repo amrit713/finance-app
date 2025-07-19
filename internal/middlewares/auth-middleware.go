@@ -36,7 +36,8 @@ func Protected(userRepo *repositories.UserRepository) fiber.Handler {
 		// 3. If still no jwtToken, return unauthorized
 		if jwtToken == "" {
 			return ctx.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
-				"error": "Missing authentication token",
+				"success": false,
+				"error":   "Missing authentication token",
 			})
 		}
 
@@ -46,8 +47,8 @@ func Protected(userRepo *repositories.UserRepository) fiber.Handler {
 
 		if err != nil || !token.Valid {
 			return ctx.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
-				"statusCode": fiber.StatusUnauthorized,
-				"error":      "unauthorized",
+				"success": false,
+				"error":   "unauthorized",
 			})
 		}
 
@@ -55,20 +56,21 @@ func Protected(userRepo *repositories.UserRepository) fiber.Handler {
 
 		if !ok {
 			return ctx.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
-				"error": "Failed to parse claims",
+				"success": false,
+				"error":   "Failed to parse claims",
 			})
 		}
 
 		userID, ok := claims["user_id"].(string)
 
 		if !ok {
-			return ctx.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": "Invalid user ID in token"})
+			return ctx.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"success": false, "error": "Invalid user ID in token"})
 		}
 
 		user, err := userRepo.FindByID(userID)
 
 		if err != nil {
-			return ctx.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": "User not found"})
+			return ctx.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"success": false, "error": "User not found"})
 		}
 
 		ctx.Locals("user", user)
