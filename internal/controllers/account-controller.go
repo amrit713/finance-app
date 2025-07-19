@@ -17,7 +17,15 @@ func NewAccountController(service interfaces.IAccountService) *AccountController
 
 // GetAllAccounts implements interfaces.IAccountController.
 func (c *AccountController) GetAllAccounts(ctx *fiber.Ctx) error {
-	user := ctx.Locals("user").(*models.User)
+	user, ok := ctx.Locals("user").(*models.User)
+
+	if !ok {
+
+		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"success": false,
+			"error":   "Invalid user context",
+		})
+	}
 	accounts, err := c.accountService.GetAllAccounts(user.ID)
 
 	if err != nil {
@@ -43,7 +51,15 @@ func (c *AccountController) GetAllAccounts(ctx *fiber.Ctx) error {
 // GetAccount implements interfaces.IAccountController.
 func (c *AccountController) GetAccount(ctx *fiber.Ctx) error {
 	accountId := ctx.Params("id")
-	user := ctx.Locals("user").(*models.User)
+	user, ok := ctx.Locals("user").(*models.User)
+
+	if !ok {
+
+		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"success": false,
+			"error":   "Invalid user context",
+		})
+	}
 	account, err := c.accountService.GetAccount(accountId, user.ID)
 
 	if err != nil {
@@ -66,12 +82,34 @@ func (c *AccountController) GetAccount(ctx *fiber.Ctx) error {
 // CreateAccount implements interfaces.IAccountController.
 func (c *AccountController) CreateAccount(ctx *fiber.Ctx) error {
 	var input dto.AccountInput
-	user := ctx.Locals("user").(*models.User)
+	user, ok := ctx.Locals("user").(*models.User)
+
+	if !ok {
+
+		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"success": false,
+			"error":   "Invalid user context",
+		})
+	}
 
 	if err := ctx.BodyParser(&input); err != nil {
 		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"success": false,
 			"error":   "Invalid input",
+		})
+	}
+
+	// Validate required fields
+	if input.Name == "" {
+		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"success": false,
+			"error":   "Account name is required",
+		})
+	}
+	if input.Balance < 0 {
+		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"success": false,
+			"error":   "Account balance cannot be negative",
 		})
 	}
 
@@ -106,7 +144,15 @@ func (c *AccountController) UpdateAccount(ctx *fiber.Ctx) error {
 
 	accountId := ctx.Params("id")
 
-	user := ctx.Locals("user").(*models.User)
+	user, ok := ctx.Locals("user").(*models.User)
+
+	if !ok {
+
+		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"success": false,
+			"error":   "Invalid user context",
+		})
+	}
 
 	account, err := c.accountService.UpdateAccount(&input, accountId, user.ID)
 

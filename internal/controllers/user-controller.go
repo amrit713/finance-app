@@ -38,7 +38,15 @@ func (c *UserController) GetAllUsers(ctx *fiber.Ctx) error {
 
 // EditMe implements interfaces.IUserController.
 func (c *UserController) EditMe(ctx *fiber.Ctx) error {
-	user := ctx.Locals("user").(*models.User)
+	user, ok := ctx.Locals("user").(*models.User)
+	if !ok {
+
+		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"success": false,
+			"error":   "Invalid user context",
+		})
+	}
+
 	var input dto.UpdateUserInput
 
 	if err := ctx.BodyParser(&input); err != nil {
