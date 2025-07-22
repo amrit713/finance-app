@@ -52,8 +52,8 @@ func (s *TransactionService) CreateTransaction(input *dto.TransactionInput, user
 		Type:        input.Type,
 	}
 
-	if input.ReciptURL != nil {
-		transaction.ReciptURL = input.ReciptURL
+	if input.ReceiptURL != nil {
+		transaction.ReceiptURL = input.ReceiptURL
 	}
 
 	if input.IsRecurring != nil {
@@ -113,8 +113,8 @@ func (s *TransactionService) UpdateTransaction(input *dto.UpdateTransactionInput
 		transaction.Type = *input.Type
 	}
 
-	if input.ReciptURL != nil {
-		transaction.ReciptURL = input.ReciptURL
+	if input.ReceiptURL != nil {
+		transaction.ReceiptURL = input.ReceiptURL
 	}
 
 	if input.IsRecurring != nil {

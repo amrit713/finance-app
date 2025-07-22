@@ -47,7 +47,7 @@ type Transaction struct {
 	Amount            float64                `json:"amount"`
 	Date              time.Time              `json:"date"`
 	Type              TransactionType        `json:"type"`
-	ReciptURL         *string                `json:"recipt_url"`
+	ReceiptURL        *string                `json:"receipt_url"`
 	IsRecurring       bool                   `gorm:"default:false;" json:"is_recurring"`
 	RecurringInterval *RecurringIntervalType `json:"recurring_interval"`
 	NextRecurringDate *time.Time             `json:"next_recurring_date"`

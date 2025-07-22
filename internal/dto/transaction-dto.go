@@ -16,7 +16,7 @@ type TransactionInput struct {
 	Date        time.Time `json:"date"`
 
 	Type              models.TransactionType        `json:"type"`
-	ReciptURL         *string                       `json:"recipt_url"`
+	ReceiptURL        *string                       `json:"receipt_url"`
 	IsRecurring       *bool                         ` json:"is_recurring"`
 	RecurringInterval *models.RecurringIntervalType `json:"recurring_interval"`
 	NextRecurringDate *time.Time                    `json:"next_recurring_date"`
@@ -32,7 +32,7 @@ type UpdateTransactionInput struct {
 	Date        *time.Time `json:"date"`
 
 	Type              *models.TransactionType       `json:"type"`
-	ReciptURL         *string                       `json:"recipt_url"`
+	ReceiptURL        *string                       `json:"receipt_url"`
 	IsRecurring       *bool                         ` json:"is_recurring"`
 	RecurringInterval *models.RecurringIntervalType `json:"recurring_interval"`
 	NextRecurringDate *time.Time                    `json:"next_recurring_date"`
