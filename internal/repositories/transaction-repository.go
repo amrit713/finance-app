@@ -16,7 +16,7 @@ func NewTransactionRepository(db *gorm.DB) *TransactionRepository {
 }
 
 // GetAllTranstions implements interfaces.ITransitionRepository.
-func (r *TransactionRepository) GetAllTranstions(userId uuid.UUID) ([]models.Transaction, error) {
+func (r *TransactionRepository) GetAllTransactions(userId uuid.UUID) ([]models.Transaction, error) {
 	var transitions []models.Transaction
 
 	err := r.db.Where("user_id =?", userId).Find(&transitions).Error
@@ -29,7 +29,7 @@ func (r *TransactionRepository) GetAllTranstions(userId uuid.UUID) ([]models.Tra
 }
 
 // GetAccountTranstions implements interfaces.ITransitionRepository.
-func (r *TransactionRepository) GetAccountTranstions(userId uuid.UUID, accountId uuid.UUID) ([]models.Transaction, error) {
+func (r *TransactionRepository) GetAccountTransactions(userId uuid.UUID, accountId uuid.UUID) ([]models.Transaction, error) {
 	var transitions []models.Transaction
 
 	err := r.db.Where("user_id =? AND account_id:?", userId, accountId).Find(&transitions).Error
@@ -48,33 +48,33 @@ func (r *TransactionRepository) FindByID(id string, userId uuid.UUID) (*models.T
 		return nil, err
 	}
 
-	var transition models.Transaction
+	var transaction models.Transaction
 
-	result := r.db.Where("id=? AND user_id=?", uid, userId).First(&transition)
+	result := r.db.Where("id=? AND user_id=?", uid, userId).First(&transaction)
 
-	return &transition, result.Error
+	return &transaction, result.Error
 
 }
 
 // Create implements interfaces.ITransitionRepository.
-func (r *TransactionRepository) Create(transition *models.Transaction) error {
-	return r.db.Create(&transition).Error
+func (r *TransactionRepository) Create(transaction *models.Transaction) error {
+	return r.db.Create(&transaction).Error
 }
 
 // Update implements interfaces.ITransitionRepository.
-func (r *TransactionRepository) Update(transition *models.Transaction) error {
-	return r.db.Model(transition).Where("id=? AND user_id=?", transition.ID, transition.UserID).Updates(transition).Error
+func (r *TransactionRepository) Update(transaction *models.Transaction) error {
+	return r.db.Model(transaction).Where("id=? AND user_id=?", transaction.ID, transaction.UserID).Updates(transaction).Error
 }
 
 // Delete implements interfaces.ITransitionRepository.
-func (r *TransactionRepository) Delete(transition *models.Transaction, id string, userId uuid.UUID) error {
+func (r *TransactionRepository) Delete(transaction *models.Transaction, id string, userId uuid.UUID) error {
 	uid, err := uuid.Parse(id)
 
 	if err != nil {
 		return err
 	}
 
-	return r.db.Where("id=? AND user_id=?", uid, userId).Delete(&transition).Error
+	return r.db.Where("id=? AND user_id=?", uid, userId).Delete(&transaction).Error
 }
 
-var _ interfaces.ITransitionRepository = (*TransactionRepository)(nil)
+var _ interfaces.ITransactionRepository = (*TransactionRepository)(nil)

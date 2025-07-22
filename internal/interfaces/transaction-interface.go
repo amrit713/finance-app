@@ -1,15 +1,25 @@
 package interfaces
 
 import (
+	"github.com/amirt713/finance-app/internal/dto"
 	"github.com/amirt713/finance-app/internal/models"
 	"github.com/google/uuid"
 )
 
-type ITransitionRepository interface {
+type ITransactionRepository interface {
 	Create(transition *models.Transaction) error
 	FindByID(id string, userId uuid.UUID) (*models.Transaction, error)
 	Update(transition *models.Transaction) error
 	Delete(transition *models.Transaction, id string, userId uuid.UUID) error
-	GetAllTranstions(userId uuid.UUID) ([]models.Transaction, error)
-	GetAccountTranstions(userId uuid.UUID, accountId uuid.UUID) ([]models.Transaction, error)
+	GetAllTransactions(userId uuid.UUID) ([]models.Transaction, error)
+	GetAccountTransactions(userId uuid.UUID, accountId uuid.UUID) ([]models.Transaction, error)
+}
+
+type ITransactionService interface {
+	GetAllTransctions(userId uuid.UUID) ([]models.Transaction, error)
+	GetAccountTransactions(userId uuid.UUID, accountId uuid.UUID) ([]models.Transaction, error)
+	GetTransaction(id string, userId uuid.UUID) (*models.Transaction, error)
+	CreateTransaction(input *dto.TransactionInput, userId uuid.UUID) (*models.Transaction, error)
+	UpdateTransaction(input *dto.UpdateTransactionInput, id string, userId uuid.UUID) (*models.Transaction, error)
+	DeleteTransaction(id string, userId uuid.UUID) error
 }

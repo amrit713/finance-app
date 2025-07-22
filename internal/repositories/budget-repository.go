@@ -16,7 +16,7 @@ func NeBudgetRepository(db *gorm.DB) *BudgetRepository {
 }
 
 // FindByID implements interfaces.IBudgetRepository.
-func (r *BudgetRepository) FindByID(id string, userId *uuid.UUID) (*models.Budget, error) {
+func (r *BudgetRepository) FindByID(id string, userId uuid.UUID) (*models.Budget, error) {
 	uid, err := uuid.Parse(id)
 	if err != nil {
 		return nil, err
