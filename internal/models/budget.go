@@ -11,7 +11,7 @@ type Budget struct {
 	ID uuid.UUID `gorm:"type:uuid;primaryKey;" json:"id"`
 
 	UserID uuid.UUID `json:"user_id"`
-	User   User      `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
+	User   *User     `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 
 	Amount        float64    `json:"amount"`
 	LastAlertSend *time.Time `json:"last_alert_send"`

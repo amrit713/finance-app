@@ -14,7 +14,7 @@ type Notification struct {
 
 	Type    string `json:"type"`
 	Message string `json:"message"`
-	Read    bool   `gorm:"type:boolean;defult:false;" json:"read" `
+	Read    bool   `gorm:"type:boolean;default:false;" json:"read" `
 
 	CreatedAt time.Time `json:"-"`
 	UpdatedAt time.Time `json:"-"`

@@ -6,10 +6,10 @@ import (
 )
 
 type Category struct {
-	ID     uuid.UUID  ` gorm:"type:uuid;primaryKey" json:"id"`
-	Name   string     `json:"name"`
-	Icon   string     `json:"icon"`
-	Color  string     `json:"color"`
+	ID   uuid.UUID ` gorm:"type:uuid;primaryKey" json:"id"`
+	Name string    `json:"name"`
+	Icon string    `json:"icon"`
+
 	UserID *uuid.UUID `json:"user_id"`
 
 	User *User `gorm:"constraint:OnUpdade:CASCADE,OnDelete:SET NULL;"`
