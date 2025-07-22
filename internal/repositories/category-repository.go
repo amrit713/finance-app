@@ -7,16 +7,16 @@ import (
 	"gorm.io/gorm"
 )
 
-type CatetgoryRepository struct {
+type CategoryRepository struct {
 	db *gorm.DB
 }
 
-func NewCatetgoryRepository(db *gorm.DB) *CatetgoryRepository {
-	return &CatetgoryRepository{db: db}
+func NewCategoryRepository(db *gorm.DB) *CategoryRepository {
+	return &CategoryRepository{db: db}
 }
 
 // GetAllCategories implements interfaces.ICatetgoryRepository.
-func (r *CatetgoryRepository) GetAllCategories(userId uuid.UUID) ([]models.Category, error) {
+func (r *CategoryRepository) GetAllCategories(userId uuid.UUID) ([]models.Category, error) {
 	var categories []models.Category
 
 	err := r.db.Where("user_id=? OR user_id=NULL", userId).Find(&categories).Error
@@ -29,7 +29,7 @@ func (r *CatetgoryRepository) GetAllCategories(userId uuid.UUID) ([]models.Categ
 }
 
 // FindByID implements interfaces.ICatetgoryRepository.
-func (r *CatetgoryRepository) FindByID(id string, userId *uuid.UUID) (*models.Category, error) {
+func (r *CategoryRepository) FindByID(id string, userId *uuid.UUID) (*models.Category, error) {
 	//TODO: USER must fetch category that is created by them
 	var category models.Category
 
@@ -55,17 +55,17 @@ func (r *CatetgoryRepository) FindByID(id string, userId *uuid.UUID) (*models.Ca
 }
 
 // Create implements interfaces.ICatetgoryRepository.
-func (r *CatetgoryRepository) Create(category *models.Category) error {
+func (r *CategoryRepository) Create(category *models.Category) error {
 	return r.db.Create(&category).Error
 }
 
 // Update implements interfaces.ICatetgoryRepository.
-func (r *CatetgoryRepository) Update(category *models.Category) error {
+func (r *CategoryRepository) Update(category *models.Category) error {
 	return r.db.Model(category).Where("id=? AND user_id=?", category.ID, category.UserID).Updates(category).Error
 }
 
 // Delete implements interfaces.ICatetgoryRepository.
-func (r *CatetgoryRepository) Delete(category *models.Category, id string, userId uuid.UUID) error {
+func (r *CategoryRepository) Delete(category *models.Category, id string, userId uuid.UUID) error {
 	uid, err := uuid.Parse(id)
 
 	if err != nil {
@@ -75,4 +75,4 @@ func (r *CatetgoryRepository) Delete(category *models.Category, id string, userI
 	return r.db.Where("id=? AND user_id=?", uid, userId).Delete(&category).Error
 }
 
-var _ interfaces.ICatetgoryRepository = (*CatetgoryRepository)(nil)
+var _ interfaces.ICategoryRepository = (*CategoryRepository)(nil)

@@ -6,7 +6,7 @@ import (
 	"github.com/google/uuid"
 )
 
-type ICatetgoryRepository interface {
+type ICategoryRepository interface {
 	Create(category *models.Category) error
 	FindByID(id string, userId *uuid.UUID) (*models.Category, error)
 	Update(category *models.Category) error

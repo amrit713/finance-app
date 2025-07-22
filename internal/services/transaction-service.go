@@ -17,18 +17,18 @@ func NewTrasactionService(repo interfaces.ITransactionRepository) *TransactionSe
 	return &TransactionService{repo: repo}
 }
 
-// GetAllTransctions implements interfaces.ITransitionService.
+// GetAllTransctions implements interfaces.ITransactionService.
 func (s *TransactionService) GetAllTransctions(userId uuid.UUID) ([]models.Transaction, error) {
 
 	return s.repo.GetAllTransactions(userId)
 }
 
-// GetAccountTranstions implements interfaces.ITransitionService.
+// GetAccountTranstions implements interfaces.ITransactionService.
 func (s *TransactionService) GetAccountTransactions(userId uuid.UUID, accountId uuid.UUID) ([]models.Transaction, error) {
 	return s.repo.GetAccountTransactions(userId, accountId)
 }
 
-// GetTransaction implements interfaces.ITransitionService.
+// GetTransaction implements interfaces.ITransactionService.
 func (s *TransactionService) GetTransaction(id string, userId uuid.UUID) (*models.Transaction, error) {
 	transaction, err := s.repo.FindByID(id, userId)
 
@@ -39,11 +39,12 @@ func (s *TransactionService) GetTransaction(id string, userId uuid.UUID) (*model
 	return transaction, nil
 }
 
-// CreateTransaction implements interfaces.ITransitionService.
+// CreateTransaction implements interfaces.ITransactionService.
 func (s *TransactionService) CreateTransaction(input *dto.TransactionInput, userId uuid.UUID) (*models.Transaction, error) {
 	transaction := &models.Transaction{
 		CategoryID: input.CategoryID,
 		AccountID:  input.AccountID,
+		UserID:     userId,
 
 		Amount:      input.Amount,
 		Date:        input.Date,
