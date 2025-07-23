@@ -7,16 +7,18 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-type AccountController struct {
-	accountService interfaces.IAccountService
+type CategoryController struct {
+	service interfaces.ICategoryService
 }
 
-func NewAccountController(service interfaces.IAccountService) *AccountController {
-	return &AccountController{accountService: service}
+func NewCategoryController(service interfaces.ICategoryService) *CategoryController {
+	return &CategoryController{
+		service: service,
+	}
 }
 
-// GetAllAccounts implements interfaces.IAccountController.
-func (c *AccountController) GetAllAccounts(ctx *fiber.Ctx) error {
+// GetAllCategories implements interfaces.ICagetoryController.
+func (c *CategoryController) GetAllCategories(ctx *fiber.Ctx) error {
 	user, ok := ctx.Locals("user").(*models.User)
 
 	if !ok {
@@ -26,7 +28,7 @@ func (c *AccountController) GetAllAccounts(ctx *fiber.Ctx) error {
 			"error":   "Invalid user context",
 		})
 	}
-	accounts, err := c.accountService.GetAllAccounts(user.ID)
+	categories, err := c.service.GetAllCategories(user.ID)
 
 	if err != nil {
 		return ctx.Status(fiber.StatusNotFound).JSON(fiber.Map{
@@ -37,20 +39,19 @@ func (c *AccountController) GetAllAccounts(ctx *fiber.Ctx) error {
 
 	return ctx.Status(fiber.StatusOK).JSON(fiber.Map{
 
-		"total_accounts": len(accounts),
-		"success":        true,
-		"message":        "Accounts fetched successfully",
+		"total_categories": len(categories),
+		"success":          true,
+		"message":          "Categories fetched successfully",
 
 		"data": fiber.Map{
-			"accounts": accounts,
+			"categories": categories,
 		},
 	})
-
 }
 
-// GetAccount implements interfaces.IAccountController.
-func (c *AccountController) GetAccount(ctx *fiber.Ctx) error {
-	accountId := ctx.Params("id")
+// GetCategory implements interfaces.ICagetoryController.
+func (c *CategoryController) GetCategory(ctx *fiber.Ctx) error {
+	categoryId := ctx.Params("id")
 	user, ok := ctx.Locals("user").(*models.User)
 
 	if !ok {
@@ -60,7 +61,7 @@ func (c *AccountController) GetAccount(ctx *fiber.Ctx) error {
 			"error":   "Invalid user context",
 		})
 	}
-	account, err := c.accountService.GetAccount(accountId, user.ID)
+	category, err := c.service.GetCategory(categoryId, &user.ID)
 
 	if err != nil {
 		return ctx.Status(fiber.StatusNotFound).JSON(fiber.Map{
@@ -70,18 +71,17 @@ func (c *AccountController) GetAccount(ctx *fiber.Ctx) error {
 	}
 	return ctx.Status(fiber.StatusOK).JSON(fiber.Map{
 		"success": true,
-		"message": "Account fetched successfully",
+		"message": "category fetched successfully",
 
 		"data": fiber.Map{
-			"account": account,
+			"category": category,
 		},
 	})
-
 }
 
-// CreateAccount implements interfaces.IAccountController.
-func (c *AccountController) CreateAccount(ctx *fiber.Ctx) error {
-	var input dto.AccountInput
+// CreateCategory implements interfaces.ICagetoryController.
+func (c *CategoryController) CreateCategory(ctx *fiber.Ctx) error {
+	var input dto.CategoryInput
 	user, ok := ctx.Locals("user").(*models.User)
 
 	if !ok {
@@ -106,14 +106,8 @@ func (c *AccountController) CreateAccount(ctx *fiber.Ctx) error {
 			"error":   "Account name is required",
 		})
 	}
-	if input.Balance < 0 {
-		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"success": false,
-			"error":   "Account balance cannot be negative",
-		})
-	}
 
-	account, err := c.accountService.CreateAccount(&input, user.ID)
+	category, err := c.service.CreateCategory(&input, &user.ID)
 
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"success": false, "error": err.Error()})
@@ -122,18 +116,18 @@ func (c *AccountController) CreateAccount(ctx *fiber.Ctx) error {
 	return ctx.Status(fiber.StatusCreated).JSON(fiber.Map{
 
 		"success": true,
-		"message": "Account created successfully",
+		"message": "Category created successfully",
 
 		"data": fiber.Map{
-			"account": account,
+			"category": category,
 		},
 	})
 
 }
 
-// UpdateAccount implements interfaces.IAccountController.
-func (c *AccountController) UpdateAccount(ctx *fiber.Ctx) error {
-	var input dto.UpdateAccountInput
+// UpdateCategory implements interfaces.ICagetoryController.
+func (c *CategoryController) UpdateCategory(ctx *fiber.Ctx) error {
+	var input dto.UpdateCategoryInput
 
 	if err := ctx.BodyParser(&input); err != nil {
 		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
@@ -142,7 +136,7 @@ func (c *AccountController) UpdateAccount(ctx *fiber.Ctx) error {
 		})
 	}
 
-	accountId := ctx.Params("id")
+	categoryId := ctx.Params("id")
 
 	user, ok := ctx.Locals("user").(*models.User)
 
@@ -154,7 +148,7 @@ func (c *AccountController) UpdateAccount(ctx *fiber.Ctx) error {
 		})
 	}
 
-	account, err := c.accountService.UpdateAccount(&input, accountId, user.ID)
+	category, err := c.service.UpdateCategory(&input, categoryId, &user.ID)
 
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"success": false, "error": err.Error()})
@@ -163,18 +157,18 @@ func (c *AccountController) UpdateAccount(ctx *fiber.Ctx) error {
 	return ctx.Status(fiber.StatusOK).JSON(fiber.Map{
 
 		"success": true,
-		"message": "Account updated successfully",
+		"message": "Category updated successfully",
 
 		"data": fiber.Map{
-			"account": account,
+			"category": category,
 		},
 	})
 
 }
 
-// DeleteAccount implements interfaces.IAccountController.
-func (c *AccountController) DeleteAccount(ctx *fiber.Ctx) error {
-	accountId := ctx.Params("id")
+// DeleteCategory implements interfaces.ICagetoryController.
+func (c *CategoryController) DeleteCategory(ctx *fiber.Ctx) error {
+	categoryId := ctx.Params("id")
 
 	user, ok := ctx.Locals("user").(*models.User)
 
@@ -186,7 +180,7 @@ func (c *AccountController) DeleteAccount(ctx *fiber.Ctx) error {
 		})
 	}
 
-	err := c.accountService.DeleteAccount(accountId, user.ID)
+	err := c.service.DeleteCategory(categoryId, &user.ID)
 
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"success": false, "error": err.Error()})
@@ -195,10 +189,9 @@ func (c *AccountController) DeleteAccount(ctx *fiber.Ctx) error {
 	return ctx.Status(fiber.StatusOK).JSON(fiber.Map{
 
 		"success": true,
-		"message": "Account deleted successfully",
+		"message": "Category deleted successfully",
 		"data":    nil,
 	})
-
 }
 
-var _ interfaces.IAccountController = (*AccountController)(nil)
+var _ interfaces.ICagetoryController = (*CategoryController)(nil)
