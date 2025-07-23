@@ -29,10 +29,15 @@ func (r *TransactionRepository) GetAllTransactions(userId uuid.UUID) ([]models.T
 }
 
 // GetAccountTranstions implements interfaces.ITransitionRepository.
-func (r *TransactionRepository) GetAccountTransactions(userId uuid.UUID, accountId uuid.UUID) ([]models.Transaction, error) {
+func (r *TransactionRepository) GetAccountTransactions(userId uuid.UUID, accountId string) ([]models.Transaction, error) {
 	var transitions []models.Transaction
 
-	err := r.db.Where("user_id =? AND account_id:?", userId, accountId).Find(&transitions).Error
+	aid, err := uuid.Parse(accountId)
+	if err != nil {
+		return nil, err
+	}
+
+	err = r.db.Where("user_id =? AND account_id:?", userId, aid).Find(&transitions).Error
 
 	if err != nil {
 		return nil, err

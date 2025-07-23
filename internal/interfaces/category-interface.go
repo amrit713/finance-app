@@ -3,6 +3,7 @@ package interfaces
 import (
 	"github.com/amirt713/finance-app/internal/dto"
 	"github.com/amirt713/finance-app/internal/models"
+	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
 )
 
@@ -21,4 +22,12 @@ type ICategoryService interface {
 	CreateCategory(input *dto.CategoryInput, userId *uuid.UUID) (*models.Category, error)
 	UpdateCategory(input *dto.UpdateCategoryInput, id string, userId *uuid.UUID) (*models.Category, error)
 	DeleteCategory(id string, userId *uuid.UUID) error
+}
+
+type ICagetoryController interface {
+	DeleteCategory(ctx *fiber.Ctx) error
+	UpdateCategory(ctx *fiber.Ctx) error
+	CreateCategory(ctx *fiber.Ctx) error
+	GetCategory(ctx *fiber.Ctx) error
+	GetAllCategories(ctx *fiber.Ctx) error
 }

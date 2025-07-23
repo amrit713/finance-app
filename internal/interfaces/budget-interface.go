@@ -3,6 +3,7 @@ package interfaces
 import (
 	"github.com/amirt713/finance-app/internal/dto"
 	"github.com/amirt713/finance-app/internal/models"
+	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
 )
 
@@ -18,4 +19,11 @@ type IBudgetService interface {
 	UpdateBudget(input *dto.UpdateBudgetInput, id string, userId uuid.UUID) (*models.Budget, error)
 	DeleteBudget(id string, userId uuid.UUID) error
 	CreateBudget(input *dto.BudgetInput, userId uuid.UUID) (*models.Budget, error)
+}
+
+type IBudgetController interface {
+	DeleteBudget(ctx *fiber.Ctx) error
+	UpdateBudget(ctx *fiber.Ctx) error
+	CreateBudget(ctx *fiber.Ctx) error
+	GetBudget(ctx *fiber.Ctx) error
 }

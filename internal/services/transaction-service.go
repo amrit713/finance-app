@@ -24,7 +24,7 @@ func (s *TransactionService) GetAllTransctions(userId uuid.UUID) ([]models.Trans
 }
 
 // GetAccountTranstions implements interfaces.ITransactionService.
-func (s *TransactionService) GetAccountTransactions(userId uuid.UUID, accountId uuid.UUID) ([]models.Transaction, error) {
+func (s *TransactionService) GetAccountTransactions(userId uuid.UUID, accountId string) ([]models.Transaction, error) {
 	return s.repo.GetAccountTransactions(userId, accountId)
 }
 
