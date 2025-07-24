@@ -4,16 +4,15 @@ import (
 	"time"
 
 	"github.com/amirt713/finance-app/internal/models"
-	"github.com/google/uuid"
 )
 
 type TransactionInput struct {
-	CategoryID  uuid.UUID `json:"category_id"`
-	AccountID   uuid.UUID `json:"account_id"`
-	Name        string    `json:"name"`
-	Description string    `json:"description"`
-	Amount      float64   `json:"amount"`
-	Date        time.Time `json:"date"`
+	CategoryID  string  `json:"category_id"`
+	AccountID   string  `json:"account_id"`
+	Name        string  `json:"name"`
+	Description string  `json:"description"`
+	Amount      float64 `json:"amount"`
+	Date        string  `json:"date"`
 
 	Type              models.TransactionType        `json:"type"`
 	ReceiptURL        *string                       `json:"receipt_url"`
@@ -25,11 +24,11 @@ type TransactionInput struct {
 }
 
 type UpdateTransactionInput struct {
-	CategoryID  *uuid.UUID `json:"category_id"` //preload is required
-	Amount      *float64   `json:"amount"`
-	Name        *string    `json:"name"`
-	Description *string    `json:"description"`
-	Date        *time.Time `json:"date"`
+	CategoryID  *string  `json:"category_id"` //preload is required
+	Amount      *float64 `json:"amount"`
+	Name        *string  `json:"name"`
+	Description *string  `json:"description"`
+	Date        *string  `json:"date"`
 
 	Type              *models.TransactionType       `json:"type"`
 	ReceiptURL        *string                       `json:"receipt_url"`

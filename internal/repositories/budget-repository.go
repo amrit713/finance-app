@@ -11,7 +11,7 @@ type BudgetRepository struct {
 	db *gorm.DB
 }
 
-func NeBudgetRepository(db *gorm.DB) *BudgetRepository {
+func NewBudgetRepository(db *gorm.DB) *BudgetRepository {
 	return &BudgetRepository{db: db}
 }
 
@@ -30,8 +30,17 @@ func (r *BudgetRepository) FindByID(id string, userId uuid.UUID) (*models.Budget
 
 }
 
+func (r *BudgetRepository) FindByUserID(userId uuid.UUID) (*models.Budget, error) {
+	var budget models.Budget
+
+	result := r.db.Where("user_id=?", userId).First(&budget)
+
+	return &budget, result.Error
+}
+
 // Create implements interfaces.IBudgetRepository.
 func (r *BudgetRepository) Create(budget *models.Budget) error {
+
 	return r.db.Create(&budget).Error
 }
 

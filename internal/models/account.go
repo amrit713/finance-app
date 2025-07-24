@@ -17,12 +17,12 @@ const (
 type Account struct {
 	ID uuid.UUID `gorm:"type:uuid;primaryKey;" json:"id"`
 
-	Name      string      `json:"name"`
-	Type      AccountType `json:"type"`
+	Name      string      `gorm:"not null;" json:"name"`
+	Type      AccountType `gorm:"not null;" json:"type"`
 	Balance   float64     `gorm:"default:0;" json:"balance"`
 	IsDefault bool        `gorm:"default:false;" json:"is_default"`
 
-	UserID uuid.UUID ` gorm:"index" json:"user_id"`
+	UserID uuid.UUID ` gorm:"index not null" json:"user_id"`
 	User   *User     `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE" json:"user "`
 
 	Transactions []Transaction `json:"transactions"`

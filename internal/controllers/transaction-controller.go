@@ -133,7 +133,7 @@ func (c *TransactionController) CreateTransaction(ctx *fiber.Ctx) error {
 	if err := ctx.BodyParser(&input); err != nil {
 		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"success": false,
-			"error":   "Invalid input",
+			"error":   err,
 		})
 	}
 

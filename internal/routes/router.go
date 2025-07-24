@@ -13,4 +13,7 @@ func SetupRoutes(app *fiber.App) {
 
 	userRoute(api, userRepo)
 	accountRoute(api, userRepo)
+	budgetRoute(api, userRepo)
+	categoryRoute(api, userRepo)
+	transactionRoute(api, userRepo)
 }
