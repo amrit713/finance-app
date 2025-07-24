@@ -33,20 +33,20 @@ const (
 type Transaction struct {
 	ID uuid.UUID `gorm:"type:uuid;primaryKey;" json:"id"`
 
-	UserID uuid.UUID `gorm:"index" json:"user_id"`
+	UserID uuid.UUID `gorm:"index not null" json:"user_id"`
 	User   User      `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 
-	CategoryID uuid.UUID `gorm:"index" json:"category_id"`
+	CategoryID uuid.UUID `gorm:"index not null" json:"category_id"`
 	Category   Category  `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 
-	AccountID uuid.UUID `gorm:"index" json:"account_id"`
+	AccountID uuid.UUID `gorm:"index not null" json:"account_id"`
 	Account   Account   `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 
 	Name              string                 `gorm:"index; not-null" json:"name"`
 	Description       string                 `gorm:"type:text" json:"description"`
-	Amount            float64                `json:"amount"`
-	Date              time.Time              `json:"date"`
-	Type              TransactionType        `json:"type"`
+	Amount            float64                `gorm:"not null;" json:"amount"`
+	Date              time.Time              `gorm:"not null;" json:"date"`
+	Type              TransactionType        `gorm:"not null;" json:"type"`
 	ReceiptURL        *string                `json:"receipt_url"`
 	IsRecurring       bool                   `gorm:"default:false;" json:"is_recurring"`
 	RecurringInterval *RecurringIntervalType `json:"recurring_interval"`

@@ -30,12 +30,19 @@ func (s *BudgetService) GetBudget(id string, userId uuid.UUID) (*models.Budget, 
 
 // CreateBudget implements interfaces.IBudgetService.
 func (s *BudgetService) CreateBudget(input *dto.BudgetInput, userId uuid.UUID) (*models.Budget, error) {
+
+	_, err := s.repo.FindByUserID(userId)
+
+	if err == nil {
+		return nil, errors.New("this user has already budget")
+	}
+
 	budget := &models.Budget{
 		Amount: input.Amount,
 		UserID: userId,
 	}
 
-	err := s.repo.Create(budget)
+	err = s.repo.Create(budget)
 
 	if err != nil {
 		return nil, errors.New("unable to create budget")

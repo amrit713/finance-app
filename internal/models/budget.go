@@ -10,10 +10,10 @@ import (
 type Budget struct {
 	ID uuid.UUID `gorm:"type:uuid;primaryKey;" json:"id"`
 
-	UserID uuid.UUID `json:"user_id"`
+	UserID uuid.UUID ` gorm:"unique;not null;" json:"user_id"`
 	User   *User     `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 
-	Amount        float64    `json:"amount"`
+	Amount        float64    `gorm:"not null;" json:"amount"`
 	LastAlertSend *time.Time `json:"last_alert_send"`
 
 	CreatedAt time.Time `json:"-"`

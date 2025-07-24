@@ -2,6 +2,8 @@ package services
 
 import (
 	"errors"
+	"fmt"
+	"time"
 
 	"github.com/amirt713/finance-app/internal/dto"
 	"github.com/amirt713/finance-app/internal/interfaces"
@@ -13,7 +15,7 @@ type TransactionService struct {
 	repo interfaces.ITransactionRepository
 }
 
-func NewTrasactionService(repo interfaces.ITransactionRepository) *TransactionService {
+func NewTransactionService(repo interfaces.ITransactionRepository) *TransactionService {
 	return &TransactionService{repo: repo}
 }
 
@@ -41,17 +43,37 @@ func (s *TransactionService) GetTransaction(id string, userId uuid.UUID) (*model
 
 // CreateTransaction implements interfaces.ITransactionService.
 func (s *TransactionService) CreateTransaction(input *dto.TransactionInput, userId uuid.UUID) (*models.Transaction, error) {
+
+	categoryId, err := uuid.Parse(input.CategoryID)
+
+	if err != nil {
+		return nil, errors.New("category id is not valid uuid")
+	}
+	accountId, err := uuid.Parse(input.AccountID)
+
+	if err != nil {
+		return nil, errors.New("account id is not valid uuid")
+	}
+
+	date, err := time.Parse(time.RFC3339, input.Date)
+
+	if err != nil {
+		return nil, errors.New("date is not correct format")
+	}
+
 	transaction := &models.Transaction{
-		CategoryID: input.CategoryID,
-		AccountID:  input.AccountID,
+		CategoryID: categoryId,
+		AccountID:  accountId,
 		UserID:     userId,
 
 		Amount:      input.Amount,
-		Date:        input.Date,
+		Date:        date,
 		Name:        input.Name,
 		Description: input.Description,
 		Type:        input.Type,
 	}
+
+	fmt.Println(transaction)
 
 	if input.ReceiptURL != nil {
 		transaction.ReceiptURL = input.ReceiptURL
@@ -76,10 +98,10 @@ func (s *TransactionService) CreateTransaction(input *dto.TransactionInput, user
 		transaction.Status = *input.Status
 	}
 
-	err := s.repo.Create(transaction)
+	err = s.repo.Create(transaction)
 
 	if err != nil {
-		return nil, errors.New("unable to create transaction")
+		return nil, fmt.Errorf("unable to create transaction: %w", err)
 	}
 
 	return transaction, nil
@@ -94,7 +116,12 @@ func (s *TransactionService) UpdateTransaction(input *dto.UpdateTransactionInput
 	}
 
 	if input.CategoryID != nil {
-		transaction.CategoryID = *input.CategoryID
+		categoryId, err := uuid.Parse(*input.CategoryID)
+
+		if err != nil {
+			return nil, errors.New("category id is not valid uuid")
+		}
+		transaction.CategoryID = categoryId
 	}
 	if input.Name != nil {
 		transaction.Name = *input.Name
@@ -107,7 +134,12 @@ func (s *TransactionService) UpdateTransaction(input *dto.UpdateTransactionInput
 	}
 
 	if input.Date != nil {
-		transaction.Date = *input.Date
+		date, err := time.Parse(time.RFC3339, *input.Date)
+
+		if err != nil {
+			return nil, errors.New("date is not correct format")
+		}
+		transaction.Date = date
 	}
 
 	if input.Type != nil {

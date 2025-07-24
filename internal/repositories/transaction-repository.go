@@ -63,6 +63,7 @@ func (r *TransactionRepository) FindByID(id string, userId uuid.UUID) (*models.T
 
 // Create implements interfaces.ITransitionRepository.
 func (r *TransactionRepository) Create(transaction *models.Transaction) error {
+
 	return r.db.Create(&transaction).Error
 }
 
